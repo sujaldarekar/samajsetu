@@ -1,0 +1,205 @@
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import authService from '../services/authService';
+
+const AdminRegister = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    registrationCode: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    // Validate form
+    if (!formData.name || !formData.email || !formData.password || !formData.registrationCode) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await authService.registerAdmin(
+        formData.name,
+        formData.email,
+        formData.password,
+        formData.registrationCode
+      );
+      navigate('/admin/dashboard');
+    } catch (err) {
+      setError(err.message || 'Admin registration failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Logo/Header */}
+        <div className="text-center mb-8">
+          <div className="text-5xl mb-4">👑</div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            SAMAJSETU
+          </h1>
+          <p className="text-gray-600">Admin Registration</p>
+          <p className="text-sm text-orange-600 font-semibold mt-2">
+            🔒 Authorized Personnel Only
+          </p>
+        </div>
+
+        {/* Register Card */}
+        <div className="bg-white rounded-lg shadow-lg p-8 border-t-4 border-orange-500">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            Create Admin Account
+          </h2>
+
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              ❌ {error}
+            </div>
+          )}
+
+          {/* Register Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Name */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                👤 Full Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Admin name"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                📧 Admin Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="admin@example.com"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+            </div>
+
+            {/* Password */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                🔐 Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+            </div>
+
+            {/* Confirm Password */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                🔐 Confirm Password
+              </label>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="••••••••"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+            </div>
+
+            {/* Registration Code */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                🔑 Registration Code
+              </label>
+              <input
+                type="password"
+                name="registrationCode"
+                value={formData.registrationCode}
+                onChange={handleChange}
+                placeholder="Enter registration code"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                You need a valid registration code to create an admin account
+              </p>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg transition disabled:opacity-50"
+            >
+              {loading ? '⏳ Creating account...' : '✓ Create Admin Account'}
+            </button>
+          </form>
+
+          {/* Login Link */}
+          <p className="text-center text-gray-600 mt-6">
+            Already have an admin account?{' '}
+            <Link to="/admin/login" className="text-orange-600 hover:underline font-semibold">
+              Login here
+            </Link>
+          </p>
+
+          {/* User Portal Link */}
+          <p className="text-center text-gray-600 mt-4 pt-4 border-t">
+            Are you a citizen?{' '}
+            <Link to="/register" className="text-blue-600 hover:underline font-semibold">
+              Citizen Portal
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AdminRegister;
