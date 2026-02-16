@@ -9,7 +9,7 @@ Node.js + Express API for the SAMAJSETU complaint management system.
 - Cloudinary Account
 - npm or yarn
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Install Dependencies
 ```bash

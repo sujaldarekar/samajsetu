@@ -6,9 +6,11 @@
 
 import { Link } from 'react-router-dom';
 import authService from '../services/authService';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const Home = () => {
   const currentUser = authService.getCurrentUser();
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen bg-background">
@@ -16,11 +18,10 @@ const Home = () => {
       <section className="bg-gradient-to-r from-primary to-blue-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-5xl font-bold mb-6">
-            🌉 Welcome to SAMAJSETU
+            🌉 {t('home.heroTitle')}
           </h1>
           <p className="text-xl mb-8 max-w-2xl mx-auto leading-relaxed">
-            Your voice matters! Report social service issues instantly and track resolution in real-time.
-            Bridging the gap between citizens and government.
+            {t('home.heroDescription')}
           </p>
           {!currentUser ? (
             <div className="flex justify-center gap-4">
@@ -28,13 +29,13 @@ const Home = () => {
                 to="/register"
                 className="bg-secondary hover:bg-green-600 text-white px-8 py-3 rounded-lg font-bold text-lg transition"
               >
-                Get Started
+                {t('home.getStarted')}
               </Link>
               <Link
                 to="/login"
                 className="bg-white hover:bg-gray-100 text-primary px-8 py-3 rounded-lg font-bold text-lg transition"
               >
-                Sign In
+                {t('home.signIn')}
               </Link>
             </div>
           ) : (
@@ -42,7 +43,7 @@ const Home = () => {
               to={currentUser.role === 'admin' ? '/admin' : '/dashboard'}
               className="bg-secondary hover:bg-green-600 text-white px-8 py-3 rounded-lg font-bold text-lg inline-block transition"
             >
-              Go to Dashboard
+              {t('home.goToDashboard')}
             </Link>
           )}
         </div>
@@ -51,33 +52,33 @@ const Home = () => {
       {/* Features Section */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">Why SAMAJSETU?</h2>
+          <h2 className="text-4xl font-bold text-center mb-12">{t('home.whyTitle')}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Feature 1 */}
             <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition text-center">
               <div className="text-5xl mb-4">⚡</div>
-              <h3 className="text-2xl font-bold mb-3 text-dark">Fast & Easy</h3>
+              <h3 className="text-2xl font-bold mb-3 text-dark">{t('home.featureFastTitle')}</h3>
               <p className="text-light">
-                Submit complaints in just 2 minutes with photo proof. No complex paperwork needed.
+                {t('home.featureFastDesc')}
               </p>
             </div>
 
             {/* Feature 2 */}
             <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition text-center">
               <div className="text-5xl mb-4">📱</div>
-              <h3 className="text-2xl font-bold mb-3 text-dark">Track Anytime</h3>
+              <h3 className="text-2xl font-bold mb-3 text-dark">{t('home.featureTrackTitle')}</h3>
               <p className="text-light">
-                Check complaint status 24/7. Get real-time updates on resolution progress.
+                {t('home.featureTrackDesc')}
               </p>
             </div>
 
             {/* Feature 3 */}
             <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition text-center">
               <div className="text-5xl mb-4">🛡️</div>
-              <h3 className="text-2xl font-bold mb-3 text-dark">Secure & Private</h3>
+              <h3 className="text-2xl font-bold mb-3 text-dark">{t('home.featureSecureTitle')}</h3>
               <p className="text-light">
-                Your data is encrypted and safe. Only authorized officials access your information.
+                {t('home.featureSecureDesc')}
               </p>
             </div>
           </div>
@@ -87,7 +88,7 @@ const Home = () => {
       {/* How It Works Section */}
       <section className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">How It Works</h2>
+          <h2 className="text-4xl font-bold text-center mb-12">{t('home.howTitle')}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Step 1 */}
@@ -95,9 +96,9 @@ const Home = () => {
               <div className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
                 1
               </div>
-              <h3 className="font-bold text-dark mb-2">Register</h3>
+              <h3 className="font-bold text-dark mb-2">{t('home.stepRegisterTitle')}</h3>
               <p className="text-sm text-light">
-                Create your account in seconds with email and password
+                {t('home.stepRegisterDesc')}
               </p>
             </div>
 
@@ -106,9 +107,9 @@ const Home = () => {
               <div className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
                 2
               </div>
-              <h3 className="font-bold text-dark mb-2">Submit</h3>
+              <h3 className="font-bold text-dark mb-2">{t('home.stepSubmitTitle')}</h3>
               <p className="text-sm text-light">
-                File a complaint with photo proof and location details
+                {t('home.stepSubmitDesc')}
               </p>
             </div>
 
@@ -117,9 +118,9 @@ const Home = () => {
               <div className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
                 3
               </div>
-              <h3 className="font-bold text-dark mb-2">Track</h3>
+              <h3 className="font-bold text-dark mb-2">{t('home.stepTrackTitle')}</h3>
               <p className="text-sm text-light">
-                Monitor status as officials work on your complaint
+                {t('home.stepTrackDesc')}
               </p>
             </div>
 
@@ -128,9 +129,9 @@ const Home = () => {
               <div className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
                 4
               </div>
-              <h3 className="font-bold text-dark mb-2">Resolved</h3>
+              <h3 className="font-bold text-dark mb-2">{t('home.stepResolvedTitle')}</h3>
               <p className="text-sm text-light">
-                Issue resolved and marked complete in system
+                {t('home.stepResolvedDesc')}
               </p>
             </div>
           </div>
@@ -140,39 +141,39 @@ const Home = () => {
       {/* Categories Section */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">We Accept Complaints About</h2>
+          <h2 className="text-4xl font-bold text-center mb-12">{t('home.categoriesTitle')}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Noise */}
             <div className="bg-yellow-50 p-8 rounded-lg border-2 border-yellow-200">
               <div className="text-6xl mb-4">🔊</div>
-              <h3 className="text-2xl font-bold text-dark mb-3">Noise Pollution</h3>
+              <h3 className="text-2xl font-bold text-dark mb-3">{t('home.catNoiseTitle')}</h3>
               <ul className="text-sm text-dark space-y-2">
-                <li>✓ Construction noise</li>
-                <li>✓ Loudspeaker misuse</li>
-                <li>✓ Traffic noise</li>
+                <li>✓ {t('home.catNoiseItem1')}</li>
+                <li>✓ {t('home.catNoiseItem2')}</li>
+                <li>✓ {t('home.catNoiseItem3')}</li>
               </ul>
             </div>
 
             {/* Garbage */}
             <div className="bg-green-50 p-8 rounded-lg border-2 border-secondary">
               <div className="text-6xl mb-4">🗑️</div>
-              <h3 className="text-2xl font-bold text-dark mb-3">Garbage & Cleanliness</h3>
+              <h3 className="text-2xl font-bold text-dark mb-3">{t('home.catGarbageTitle')}</h3>
               <ul className="text-sm text-dark space-y-2">
-                <li>✓ Uncleaned streets</li>
-                <li>✓ Garbage dumping</li>
-                <li>✓ Sanitation issues</li>
+                <li>✓ {t('home.catGarbageItem1')}</li>
+                <li>✓ {t('home.catGarbageItem2')}</li>
+                <li>✓ {t('home.catGarbageItem3')}</li>
               </ul>
             </div>
 
             {/* Water */}
             <div className="bg-blue-50 p-8 rounded-lg border-2 border-blue-200">
               <div className="text-6xl mb-4">💧</div>
-              <h3 className="text-2xl font-bold text-dark mb-3">Water Supply</h3>
+              <h3 className="text-2xl font-bold text-dark mb-3">{t('home.catWaterTitle')}</h3>
               <ul className="text-sm text-dark space-y-2">
-                <li>✓ No water supply</li>
-                <li>✓ Water contamination</li>
-                <li>✓ Pipe leaks</li>
+                <li>✓ {t('home.catWaterItem1')}</li>
+                <li>✓ {t('home.catWaterItem2')}</li>
+                <li>✓ {t('home.catWaterItem3')}</li>
               </ul>
             </div>
           </div>
@@ -185,15 +186,15 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div>
               <h3 className="text-5xl font-bold mb-2">10,000+</h3>
-              <p className="text-lg">Active Citizens</p>
+              <p className="text-lg">{t('home.statsActiveCitizens')}</p>
             </div>
             <div>
               <h3 className="text-5xl font-bold mb-2">5,000+</h3>
-              <p className="text-lg">Issues Resolved</p>
+              <p className="text-lg">{t('home.statsIssuesResolved')}</p>
             </div>
             <div>
               <h3 className="text-5xl font-bold mb-2">95%</h3>
-              <p className="text-lg">Resolution Rate</p>
+              <p className="text-lg">{t('home.statsResolutionRate')}</p>
             </div>
           </div>
         </div>

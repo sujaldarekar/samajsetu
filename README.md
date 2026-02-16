@@ -8,7 +8,7 @@ A complete MERN full-stack web application for managing citizen complaints relat
 
 ---
 
-## 🚀 Quick Links
+## Quick Links
 - 📖 [Full Documentation](./PROJECT_OVERVIEW.md)
 - 🛠️ [Setup Guides](./docs/)
 - 📚 [API Reference](./docs/API_REFERENCE.md)
@@ -93,7 +93,7 @@ samajsetu/
 
 ---
 
-## 🚀 Quick Start (5 Minutes)
+## Quick Start (5 Minutes)
 
 ### Prerequisites
 - Node.js v18+
@@ -268,7 +268,7 @@ A cloud service that hosts and delivers images. Instead of storing images on you
 
 ---
 
-## 🚀 Going to Production
+## Going to Production
 
 ### Backend
 1. Deploy to Heroku, Railway, or AWS

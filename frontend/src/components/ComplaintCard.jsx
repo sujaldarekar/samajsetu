@@ -6,8 +6,10 @@
 
 import { Link } from 'react-router-dom';
 import StatusBadge from './StatusBadge';
+import { useLanguage } from '../i18n/LanguageContext';
 
-const ComplaintCard = ({ complaint, onActionClick = null, actionLabel = 'View Details' }) => {
+const ComplaintCard = ({ complaint, onActionClick = null, actionLabel = null }) => {
+  const { t } = useLanguage();
   const categoryIcons = {
     noise: '🔊',
     garbage: '🗑️',
@@ -15,10 +17,12 @@ const ComplaintCard = ({ complaint, onActionClick = null, actionLabel = 'View De
   };
 
   const categoryLabels = {
-    noise: 'Noise Pollution',
-    garbage: 'Garbage/Cleanliness',
-    water: 'Water Supply'
+    noise: t('complaint.category.noise'),
+    garbage: t('complaint.category.garbage'),
+    water: t('complaint.category.water')
   };
+
+  const resolvedActionLabel = actionLabel || t('complaint.viewDetails');
 
   const handleAction = () => {
     if (onActionClick) {
@@ -57,7 +61,7 @@ const ComplaintCard = ({ complaint, onActionClick = null, actionLabel = 'View De
         <div className="mb-3">
           <img
             src={complaint.imageUrl}
-            alt="Complaint proof"
+            alt={t('complaint.proofAlt')}
             className="w-full h-40 object-cover rounded-lg"
           />
         </div>
@@ -72,7 +76,7 @@ const ComplaintCard = ({ complaint, onActionClick = null, actionLabel = 'View De
           onClick={handleAction}
           className="text-primary hover:text-blue-700 font-semibold transition"
         >
-          {actionLabel} →
+          {resolvedActionLabel} →
         </button>
       </div>
     </div>

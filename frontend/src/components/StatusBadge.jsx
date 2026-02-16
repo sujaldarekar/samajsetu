@@ -3,25 +3,28 @@
  * Shows the current status of a complaint with color coding
  */
 
+import { useLanguage } from '../i18n/LanguageContext';
+
 const StatusBadge = ({ status }) => {
+  const { t } = useLanguage();
   const statusConfig = {
     pending: {
       bg: 'bg-yellow-100',
       text: 'text-yellow-800',
       icon: '⏳',
-      label: 'Pending'
+      label: t('status.pending')
     },
     'in-progress': {
       bg: 'bg-blue-100',
       text: 'text-blue-800',
       icon: '🔄',
-      label: 'In Progress'
+      label: t('status.inProgress')
     },
     resolved: {
       bg: 'bg-green-100',
       text: 'text-green-800',
       icon: '✅',
-      label: 'Resolved'
+      label: t('status.resolved')
     }
   };
 

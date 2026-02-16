@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ComplaintCard from '../components/ComplaintCard';
 import complaintService from '../services/complaintService';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const MyComplaints = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const MyComplaints = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetchComplaints();
@@ -26,7 +28,7 @@ const MyComplaints = () => {
       const response = await complaintService.getMyComplaints();
       setComplaints(response.complaints || []);
     } catch (err) {
-      setError(err.message || 'Failed to load complaints');
+      setError(err.message || t('errors.failedToLoadComplaints'));
     } finally {
       setLoading(false);
     }
@@ -35,6 +37,13 @@ const MyComplaints = () => {
   const filteredComplaints = filterStatus === 'all'
     ? complaints
     : complaints.filter(c => c.status === filterStatus);
+
+  const statusLabelMap = {
+    all: t('myComplaints.filterAll'),
+    pending: t('myComplaints.filterPending'),
+    'in-progress': t('myComplaints.filterInProgress'),
+    resolved: t('myComplaints.filterResolved')
+  };
 
   if (loading) return <LoadingSpinner />;
 
@@ -46,17 +55,17 @@ const MyComplaints = () => {
           <div>
             <h1 className="text-4xl font-bold text-dark mb-2 flex items-center gap-2">
               <span className="text-2xl" aria-hidden="true">🕒</span>
-              My Complaints
+              {t('myComplaints.title')}
             </h1>
             <p className="text-light">
-              Track the status of all your submitted complaints
+              {t('myComplaints.subtitle')}
             </p>
           </div>
           <button
             onClick={() => navigate('/submit-complaint')}
             className="bg-secondary hover:bg-green-600 text-white font-bold px-6 py-3 rounded-lg transition"
           >
-            📝 New Complaint
+            📝 {t('myComplaints.newComplaint')}
           </button>
         </div>
 
@@ -79,10 +88,10 @@ const MyComplaints = () => {
                   : 'bg-white text-dark border border-gray-300 hover:bg-gray-50'
               }`}
             >
-              {status === 'all' ? '📊 All' : ''}
-              {status === 'pending' ? '⏳ Pending' : ''}
-              {status === 'in-progress' ? '🔄 In Progress' : ''}
-              {status === 'resolved' ? '✅ Resolved' : ''}
+              {status === 'all' ? `📊 ${t('myComplaints.filterAll')}` : ''}
+              {status === 'pending' ? `⏳ ${t('myComplaints.filterPending')}` : ''}
+              {status === 'in-progress' ? `🔄 ${t('myComplaints.filterInProgress')}` : ''}
+              {status === 'resolved' ? `✅ ${t('myComplaints.filterResolved')}` : ''}
             </button>
           ))}
         </div>
@@ -94,7 +103,7 @@ const MyComplaints = () => {
               <ComplaintCard
                 key={complaint._id}
                 complaint={complaint}
-                actionLabel="View Details"
+                actionLabel={t('complaint.viewDetails')}
                 onActionClick={(id) => navigate(`/complaint/${id}`)}
               />
             ))}
@@ -103,18 +112,18 @@ const MyComplaints = () => {
           <div className="text-center py-12">
             <div className="text-6xl mb-4">📭</div>
             <h2 className="text-2xl font-bold text-dark mb-2">
-              No complaints yet
+              {t('myComplaints.noComplaintsTitle')}
             </h2>
             <p className="text-light mb-6">
               {filterStatus === 'all'
-                ? 'You haven\'t submitted any complaints yet.'
-                : `You don't have any ${filterStatus} complaints.`}
+                ? t('myComplaints.noComplaintsAll')
+                : t('myComplaints.noComplaintsByStatus', { status: statusLabelMap[filterStatus] })}
             </p>
             <button
               onClick={() => navigate('/submit-complaint')}
               className="bg-primary hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg transition"
             >
-              📝 Submit Your First Complaint
+              📝 {t('myComplaints.submitFirst')}
             </button>
           </div>
         )}
@@ -126,25 +135,25 @@ const MyComplaints = () => {
               <div className="text-3xl font-bold text-dark mb-2">
                 {complaints.length}
               </div>
-              <p className="text-light text-sm">Total Complaints</p>
+              <p className="text-light text-sm">{t('myComplaints.totalComplaints')}</p>
             </div>
             <div className="bg-yellow-50 rounded-lg p-6 text-center shadow-md border-l-4 border-yellow-400">
               <div className="text-3xl font-bold text-yellow-700 mb-2">
                 {complaints.filter(c => c.status === 'pending').length}
               </div>
-              <p className="text-light text-sm">Pending</p>
+              <p className="text-light text-sm">{t('myComplaints.pending')}</p>
             </div>
             <div className="bg-blue-50 rounded-lg p-6 text-center shadow-md border-l-4 border-primary">
               <div className="text-3xl font-bold text-primary mb-2">
                 {complaints.filter(c => c.status === 'in-progress').length}
               </div>
-              <p className="text-light text-sm">In Progress</p>
+              <p className="text-light text-sm">{t('myComplaints.inProgress')}</p>
             </div>
             <div className="bg-green-50 rounded-lg p-6 text-center shadow-md border-l-4 border-secondary">
               <div className="text-3xl font-bold text-secondary mb-2">
                 {complaints.filter(c => c.status === 'resolved').length}
               </div>
-              <p className="text-light text-sm">Resolved</p>
+              <p className="text-light text-sm">{t('myComplaints.resolved')}</p>
             </div>
           </div>
         )}

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import authService from '../services/authService';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const AdminRegister = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const AdminRegister = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { t } = useLanguage();
 
   const handleChange = (e) => {
     setFormData({
@@ -27,17 +29,17 @@ const AdminRegister = () => {
 
     // Validate form
     if (!formData.name || !formData.email || !formData.password || !formData.registrationCode) {
-      setError('Please fill in all fields');
+      setError(t('errors.fillAllFields'));
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError(t('errors.passwordsDoNotMatch'));
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError(t('errors.passwordMinLength'));
       return;
     }
 
@@ -52,7 +54,7 @@ const AdminRegister = () => {
       );
       navigate('/admin/dashboard');
     } catch (err) {
-      setError(err.message || 'Admin registration failed');
+      setError(err.message || t('errors.adminRegistrationFailed'));
     } finally {
       setLoading(false);
     }
@@ -67,16 +69,16 @@ const AdminRegister = () => {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             SAMAJSETU
           </h1>
-          <p className="text-gray-600">Admin Registration</p>
+          <p className="text-gray-600">{t('adminRegister.portalTitle')}</p>
           <p className="text-sm text-orange-600 font-semibold mt-2">
-            🔒 Authorized Personnel Only
+            🔒 {t('adminRegister.authorizedOnly')}
           </p>
         </div>
 
         {/* Register Card */}
         <div className="bg-white rounded-lg shadow-lg p-8 border-t-4 border-orange-500">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Create Admin Account
+            {t('adminRegister.title')}
           </h2>
 
           {/* Error Message */}
@@ -91,14 +93,14 @@ const AdminRegister = () => {
             {/* Name */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                👤 Full Name
+                👤 {t('adminRegister.fullNameLabel')}
               </label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Admin name"
+                placeholder={t('adminRegister.fullNamePlaceholder')}
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
@@ -107,14 +109,14 @@ const AdminRegister = () => {
             {/* Email */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                📧 Admin Email
+                📧 {t('adminRegister.emailLabel')}
               </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="admin@example.com"
+                placeholder={t('adminRegister.emailPlaceholder')}
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
@@ -123,7 +125,7 @@ const AdminRegister = () => {
             {/* Password */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                🔐 Password
+                🔐 {t('adminRegister.passwordLabel')}
               </label>
               <input
                 type="password"
@@ -139,7 +141,7 @@ const AdminRegister = () => {
             {/* Confirm Password */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                🔐 Confirm Password
+                🔐 {t('adminRegister.confirmPasswordLabel')}
               </label>
               <input
                 type="password"
@@ -155,19 +157,19 @@ const AdminRegister = () => {
             {/* Registration Code */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                🔑 Registration Code
+                🔑 {t('adminRegister.registrationCodeLabel')}
               </label>
               <input
                 type="password"
                 name="registrationCode"
                 value={formData.registrationCode}
                 onChange={handleChange}
-                placeholder="Enter registration code"
+                placeholder={t('adminRegister.registrationCodePlaceholder')}
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
               <p className="text-xs text-gray-500 mt-1">
-                You need a valid registration code to create an admin account
+                {t('adminRegister.registrationCodeHelp')}
               </p>
             </div>
 
@@ -177,23 +179,23 @@ const AdminRegister = () => {
               disabled={loading}
               className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg transition disabled:opacity-50"
             >
-              {loading ? '⏳ Creating account...' : '✓ Create Admin Account'}
+              {loading ? `⏳ ${t('adminRegister.creatingAccount')}` : `✓ ${t('adminRegister.createButton')}`}
             </button>
           </form>
 
           {/* Login Link */}
           <p className="text-center text-gray-600 mt-6">
-            Already have an admin account?{' '}
+            {t('adminRegister.haveAccount')}{' '}
             <Link to="/admin/login" className="text-orange-600 hover:underline font-semibold">
-              Login here
+              {t('adminRegister.loginHere')}
             </Link>
           </p>
 
           {/* User Portal Link */}
           <p className="text-center text-gray-600 mt-4 pt-4 border-t">
-            Are you a citizen?{' '}
+            {t('adminRegister.citizenPrompt')}{' '}
             <Link to="/register" className="text-blue-600 hover:underline font-semibold">
-              Citizen Portal
+              {t('adminRegister.citizenPortal')}
             </Link>
           </p>
         </div>

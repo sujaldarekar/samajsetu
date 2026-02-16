@@ -29,7 +29,7 @@
 - ✅ **`.github/ISSUE_TEMPLATE/question.md`** - Q&A template
 - ✅ **`.github/PULL_REQUEST_TEMPLATE.md`** - PR guidelines
 
-### 🚀 Automation
+### Automation
 - ✅ **`.github/workflows/ci-cd.yml`** - GitHub Actions CI/CD pipeline
 - ✅ **`.github/README.md`** - `.github` folder documentation
 
@@ -206,7 +206,7 @@ samajsetu/
 
 ---
 
-## 🚀 Ready to Deploy?
+## Ready to Deploy?
 
 See `DEPLOY.md` for complete deployment guides:
 - **Netlify + Railway** (Recommended for beginners)
@@ -285,7 +285,7 @@ git push -u origin main
 
 **Made with ❤️ for the Community**
 
-Your project is now ready! 🚀
+Your project is now ready!
 
 Update placeholder URLs and push to GitHub!
 

@@ -266,7 +266,7 @@ Text Light:       #7F8C8D  (Secondary info)
 
 ---
 
-## 🚀 Quick Start (Overview)
+## Quick Start (Overview)
 
 ### Backend Setup
 ```bash

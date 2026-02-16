@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import authService from '../services/authService';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const UserRegister = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const UserRegister = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { t } = useLanguage();
 
   const handleChange = (e) => {
     setFormData({
@@ -26,17 +28,17 @@ const UserRegister = () => {
 
     // Validate form
     if (!formData.name || !formData.email || !formData.password) {
-      setError('Please fill in all fields');
+      setError(t('errors.fillAllFields'));
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError(t('errors.passwordsDoNotMatch'));
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError(t('errors.passwordMinLength'));
       return;
     }
 
@@ -46,7 +48,7 @@ const UserRegister = () => {
       await authService.registerUser(formData.name, formData.email, formData.password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Registration failed');
+      setError(err.message || t('errors.registrationFailed'));
     } finally {
       setLoading(false);
     }
@@ -61,13 +63,13 @@ const UserRegister = () => {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             SAMAJSETU
           </h1>
-          <p className="text-gray-600">Join as a Citizen</p>
+          <p className="text-gray-600">{t('userRegister.joinTitle')}</p>
         </div>
 
         {/* Register Card */}
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Create Citizen Account
+            {t('userRegister.createTitle')}
           </h2>
 
           {/* Error Message */}
@@ -82,14 +84,14 @@ const UserRegister = () => {
             {/* Name */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                👤 Full Name
+                👤 {t('userRegister.fullName')}
               </label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Your full name"
+                placeholder={t('userRegister.fullNamePlaceholder')}
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
@@ -98,14 +100,14 @@ const UserRegister = () => {
             {/* Email */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                📧 Email
+                📧 {t('userRegister.email')}
               </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="your@example.com"
+                placeholder={t('userRegister.emailPlaceholder')}
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
@@ -114,7 +116,7 @@ const UserRegister = () => {
             {/* Password */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                🔐 Password
+                🔐 {t('userRegister.password')}
               </label>
               <input
                 type="password"
@@ -130,7 +132,7 @@ const UserRegister = () => {
             {/* Confirm Password */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                🔐 Confirm Password
+                🔐 {t('userRegister.confirmPassword')}
               </label>
               <input
                 type="password"
@@ -149,23 +151,23 @@ const UserRegister = () => {
               disabled={loading}
               className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition disabled:opacity-50"
             >
-              {loading ? '⏳ Creating account...' : '✓ Create Account'}
+              {loading ? `⏳ ${t('userRegister.creatingAccount')}` : `✓ ${t('userRegister.createButton')}`}
             </button>
           </form>
 
           {/* Login Link */}
           <p className="text-center text-gray-600 mt-6">
-            Already have an account?{' '}
+            {t('userRegister.haveAccount')}{' '}
             <Link to="/login" className="text-blue-600 hover:underline font-semibold">
-              Login here
+              {t('userRegister.loginHere')}
             </Link>
           </p>
 
           {/* Admin Portal Link */}
           <p className="text-center text-gray-600 mt-4 pt-4 border-t">
-            Are you an admin?{' '}
+            {t('userRegister.adminPrompt')}{' '}
             <Link to="/admin/register" className="text-orange-600 hover:underline font-semibold">
-              Admin Portal
+              {t('userRegister.adminPortal')}
             </Link>
           </p>
         </div>

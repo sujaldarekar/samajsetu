@@ -2,7 +2,7 @@
 
 React.js + Vite frontend for the SAMAJSETU complaint management system.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Install Dependencies
 ```bash

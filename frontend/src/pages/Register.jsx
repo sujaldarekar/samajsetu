@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import authService from '../services/authService';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
+  const { t } = useLanguage();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,15 +37,15 @@ const Register = () => {
     try {
       // Validate inputs
       if (!formData.name || !formData.email || !formData.password) {
-        throw new Error('All fields are required');
+        throw new Error(t('errors.allFieldsRequired'));
       }
 
       if (formData.password.length < 6) {
-        throw new Error('Password must be at least 6 characters');
+        throw new Error(t('errors.passwordMinLength'));
       }
 
       if (formData.password !== formData.confirmPassword) {
-        throw new Error('Passwords do not match');
+        throw new Error(t('errors.passwordsDoNotMatch'));
       }
 
       // Call register API
@@ -56,7 +58,7 @@ const Register = () => {
       // Redirect to dashboard after successful registration
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Registration failed');
+      setError(err.message || t('errors.registrationFailed'));
     } finally {
       setLoading(false);
     }
@@ -68,10 +70,10 @@ const Register = () => {
         {/* Card */}
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-bold text-center text-dark mb-2">
-            🌉 Join SAMAJSETU
+            🌉 {t('register.joinTitle')}
           </h1>
           <p className="text-center text-light mb-8">
-            Create your account to report complaints
+            {t('register.subtitle')}
           </p>
 
           {/* Error Message */}
@@ -85,14 +87,14 @@ const Register = () => {
             {/* Name Field */}
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
-                Full Name
+                {t('register.fullName')}
               </label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="John Doe"
+                placeholder={t('register.fullNamePlaceholder')}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 disabled={loading}
               />
@@ -101,14 +103,14 @@ const Register = () => {
             {/* Email Field */}
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
-                Email Address
+                {t('register.emailLabel')}
               </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="john@example.com"
+                placeholder={t('register.emailPlaceholder')}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 disabled={loading}
               />
@@ -117,7 +119,7 @@ const Register = () => {
             {/* Password Field */}
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
-                Password
+                {t('register.passwordLabel')}
               </label>
               <input
                 type="password"
@@ -129,14 +131,14 @@ const Register = () => {
                 disabled={loading}
               />
               <p className="text-xs text-light mt-1">
-                Minimum 6 characters
+                {t('register.passwordHint')}
               </p>
             </div>
 
             {/* Confirm Password Field */}
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
-                Confirm Password
+                {t('register.confirmPassword')}
               </label>
               <input
                 type="password"
@@ -155,16 +157,16 @@ const Register = () => {
               disabled={loading}
               className="w-full bg-primary hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition disabled:opacity-50"
             >
-              {loading ? '⏳ Creating Account...' : '✅ Create Account'}
+              {loading ? `⏳ ${t('register.creatingAccount')}` : `✅ ${t('register.createAccount')}`}
             </button>
           </form>
 
           {/* Login Link */}
           <div className="text-center mt-6">
             <p className="text-sm text-light">
-              Already have an account?{' '}
+              {t('register.haveAccount')}{' '}
               <Link to="/login" className="text-primary hover:text-blue-700 font-semibold">
-                Login here
+                {t('register.loginHere')}
               </Link>
             </p>
           </div>
@@ -172,9 +174,9 @@ const Register = () => {
           {/* Terms */}
           <div className="text-center mt-4 text-xs text-light">
             <p>
-              By registering, you agree to our{' '}
+              {t('register.termsPrefix')}{' '}
               <a href="#" className="text-primary hover:underline">
-                Terms & Conditions
+                {t('register.termsLink')}
               </a>
             </p>
           </div>

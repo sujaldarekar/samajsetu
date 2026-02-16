@@ -80,7 +80,7 @@ app.listen(PORT, () => {
   console.log('╔═══════════════════════════════════╗');
   console.log('║   SAMAJSETU BACKEND SERVER        ║');
   console.log('╚═══════════════════════════════════╝');
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
   console.log(`📍 Environment: ${process.env.NODE_ENV}`);
   console.log(`⏰ Started at: ${new Date().toLocaleTimeString()}`);
   console.log('\n');

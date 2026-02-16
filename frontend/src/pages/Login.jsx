@@ -6,11 +6,13 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import authService from '../services/authService';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -33,7 +35,7 @@ const Login = () => {
     try {
       // Validate inputs
       if (!formData.email || !formData.password) {
-        throw new Error('Email and password are required');
+        throw new Error(t('errors.requiredEmailPassword'));
       }
 
       // Call login API
@@ -49,7 +51,7 @@ const Login = () => {
         navigate('/dashboard');
       }
     } catch (err) {
-      setError(err.message || 'Login failed');
+      setError(err.message || t('errors.loginFailed'));
     } finally {
       setLoading(false);
     }
@@ -61,10 +63,10 @@ const Login = () => {
         {/* Card */}
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-bold text-center text-dark mb-2">
-            🌉 Welcome Back
+            🌉 {t('login.welcomeBack')}
           </h1>
           <p className="text-center text-light mb-8">
-            Sign in to your SAMAJSETU account
+            {t('login.signInSubtitle')}
           </p>
 
           {/* Error Message */}
@@ -76,23 +78,23 @@ const Login = () => {
 
           {/* Demo Credentials */}
           <div className="bg-blue-50 border border-blue-200 rounded p-4 mb-6 text-sm">
-            <p className="font-semibold text-primary mb-2">📌 Demo Credentials:</p>
-            <p className="text-dark"><strong>Citizen:</strong> citizen@example.com / password123</p>
-            <p className="text-dark"><strong>Admin:</strong> admin@example.com / admin123</p>
+            <p className="font-semibold text-primary mb-2">📌 {t('login.demoCredentials')}</p>
+            <p className="text-dark"><strong>{t('login.demoCitizen')}</strong> citizen@example.com / password123</p>
+            <p className="text-dark"><strong>{t('login.demoAdmin')}</strong> admin@example.com / admin123</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email Field */}
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
-                Email Address
+                {t('login.emailLabel')}
               </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="your@email.com"
+                placeholder={t('login.emailPlaceholder')}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 disabled={loading}
               />
@@ -101,7 +103,7 @@ const Login = () => {
             {/* Password Field */}
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
-                Password
+                {t('login.passwordLabel')}
               </label>
               <input
                 type="password"
@@ -122,7 +124,7 @@ const Login = () => {
                 className="w-4 h-4 text-primary"
               />
               <label htmlFor="remember" className="ml-2 text-sm text-dark">
-                Remember me
+                {t('login.rememberMe')}
               </label>
             </div>
 
@@ -132,16 +134,16 @@ const Login = () => {
               disabled={loading}
               className="w-full bg-primary hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition disabled:opacity-50"
             >
-              {loading ? '⏳ Signing in...' : '✅ Sign In'}
+              {loading ? `⏳ ${t('login.signingIn')}` : `✅ ${t('login.signInButton')}`}
             </button>
           </form>
 
           {/* Register Link */}
           <div className="text-center mt-6">
             <p className="text-sm text-light">
-              Don't have an account?{' '}
+              {t('login.noAccount')}{' '}
               <Link to="/register" className="text-primary hover:text-blue-700 font-semibold">
-                Register here
+                {t('login.registerHere')}
               </Link>
             </p>
           </div>
@@ -149,7 +151,7 @@ const Login = () => {
           {/* Forgot Password Link */}
           <div className="text-center mt-4">
             <a href="#" className="text-sm text-primary hover:text-blue-700">
-              Forgot your password?
+              {t('login.forgotPassword')}
             </a>
           </div>
         </div>

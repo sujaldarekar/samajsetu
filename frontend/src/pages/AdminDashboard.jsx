@@ -9,6 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import StatusBadge from '../components/StatusBadge';
 import complaintService from '../services/complaintService';
 import authService from '../services/authService';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const AdminDashboard = () => {
   const [newNote, setNewNote] = useState('');
   const [noteLoading, setNoteLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState({});
+  const { t } = useLanguage();
 
   const currentUser = authService.getCurrentUser();
 
@@ -49,7 +51,7 @@ const AdminDashboard = () => {
       setComplaints(complaintsRes.complaints || []);
       setStats(statsRes.stats);
     } catch (err) {
-      setError(err.message || 'Failed to load data');
+      setError(err.message || t('adminDashboard.failedToLoadData'));
     } finally {
       setLoading(false);
     }
@@ -61,7 +63,7 @@ const AdminDashboard = () => {
       const res = await complaintService.getComplaintDetail(complaintId);
       setSelectedComplaint(res.complaint);
     } catch (err) {
-      alert('Failed to load complaint details: ' + err.message);
+      alert(`${t('adminDashboard.failedToLoadDetails')}: ${err.message}`);
     } finally {
       setDetailLoading(false);
     }
@@ -76,7 +78,7 @@ const AdminDashboard = () => {
         handleViewDetail(complaintId);
       }
     } catch (err) {
-      alert('❌ Failed to update status: ' + err.message);
+      alert(`❌ ${t('adminDashboard.failedToUpdateStatus')}: ${err.message}`);
     } finally {
       setActionLoading(prev => ({ ...prev, [complaintId]: false }));
     }
@@ -84,7 +86,7 @@ const AdminDashboard = () => {
 
   const handleAddNote = async (complaintId) => {
     if (!newNote.trim()) {
-      alert('Please enter a note');
+      alert(t('adminDashboard.addNoteValidation'));
       return;
     }
     setNoteLoading(true);
@@ -93,7 +95,7 @@ const AdminDashboard = () => {
       setSelectedComplaint(res.complaint);
       setNewNote('');
     } catch (err) {
-      alert('Failed to add note: ' + err.message);
+      alert(`${t('adminDashboard.failedToAddNote')}: ${err.message}`);
     } finally {
       setNoteLoading(false);
     }
@@ -107,7 +109,7 @@ const AdminDashboard = () => {
       }
       fetchData();
     } catch (err) {
-      alert('Failed to update priority: ' + err.message);
+      alert(`${t('adminDashboard.failedToUpdatePriority')}: ${err.message}`);
     }
   };
 
@@ -124,6 +126,19 @@ const AdminDashboard = () => {
     }
   };
 
+  const getPriorityLabel = (priority) => {
+    switch (priority) {
+      case 'high':
+        return t('adminDashboard.priorityHigh');
+      case 'medium':
+        return t('adminDashboard.priorityMedium');
+      case 'low':
+        return t('adminDashboard.priorityLow');
+      default:
+        return priority;
+    }
+  };
+
   const getNextStatus = (currentStatus) => {
     const statusFlow = {
       'pending': 'in-progress',
@@ -131,6 +146,19 @@ const AdminDashboard = () => {
       'resolved': 'resolved'
     };
     return statusFlow[currentStatus];
+  };
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'pending':
+        return t('status.pending');
+      case 'in-progress':
+        return t('status.inProgress');
+      case 'resolved':
+        return t('status.resolved');
+      default:
+        return status;
+    }
   };
 
   if (loading) return <LoadingSpinner />;
@@ -141,10 +169,10 @@ const AdminDashboard = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            ⚙️ Admin Dashboard
+            ⚙️ {t('adminDashboard.title')}
           </h1>
           <p className="text-gray-600">
-            Manage all citizen complaints and track resolution progress
+            {t('adminDashboard.subtitle')}
           </p>
         </div>
 
@@ -162,67 +190,67 @@ const AdminDashboard = () => {
               <div className="text-3xl font-bold text-gray-900 mb-2">
                 {stats.total}
               </div>
-              <p className="text-gray-600 text-sm">Total Complaints</p>
+              <p className="text-gray-600 text-sm">{t('adminDashboard.totalComplaints')}</p>
             </div>
             <div className="bg-yellow-50 rounded-lg p-6 shadow-md border-l-4 border-yellow-400">
               <div className="text-3xl font-bold text-yellow-700 mb-2">
                 {stats.pending}
               </div>
-              <p className="text-gray-600 text-sm">Pending</p>
+              <p className="text-gray-600 text-sm">{t('adminDashboard.pending')}</p>
             </div>
             <div className="bg-blue-50 rounded-lg p-6 shadow-md border-l-4 border-blue-400">
               <div className="text-3xl font-bold text-blue-700 mb-2">
                 {stats.inProgress}
               </div>
-              <p className="text-gray-600 text-sm">In Progress</p>
+              <p className="text-gray-600 text-sm">{t('adminDashboard.inProgress')}</p>
             </div>
             <div className="bg-green-50 rounded-lg p-6 shadow-md border-l-4 border-green-400">
               <div className="text-3xl font-bold text-green-700 mb-2">
                 {stats.resolved}
               </div>
-              <p className="text-gray-600 text-sm">Resolved</p>
+              <p className="text-gray-600 text-sm">{t('adminDashboard.resolved')}</p>
             </div>
             <div className="bg-purple-50 rounded-lg p-6 shadow-md border-l-4 border-purple-500">
               <div className="text-3xl font-bold text-purple-700 mb-2">
                 {stats.resolutionRate}
               </div>
-              <p className="text-gray-600 text-sm">Resolution Rate</p>
+              <p className="text-gray-600 text-sm">{t('adminDashboard.resolutionRate')}</p>
             </div>
           </div>
         )}
 
         {/* Filters */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h3 className="font-bold text-gray-900 mb-4">🔍 Filters</h3>
+          <h3 className="font-bold text-gray-900 mb-4">🔍 {t('adminDashboard.filters')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                Category
+                {t('adminDashboard.categoryLabel')}
               </label>
               <select
                 value={filters.category}
                 onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">All Categories</option>
-                <option value="noise">🔊 Noise Pollution</option>
-                <option value="garbage">🗑️ Garbage</option>
-                <option value="water">💧 Water</option>
+                <option value="">{t('adminDashboard.allCategories')}</option>
+                <option value="noise">🔊 {t('complaint.category.noise')}</option>
+                <option value="garbage">🗑️ {t('complaint.category.garbage')}</option>
+                <option value="water">💧 {t('complaint.category.water')}</option>
               </select>
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                Status
+                {t('adminDashboard.statusLabel')}
               </label>
               <select
                 value={filters.status}
                 onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">All Statuses</option>
-                <option value="pending">⏳ Pending</option>
-                <option value="in-progress">🔄 In Progress</option>
-                <option value="resolved">✅ Resolved</option>
+                <option value="">{t('adminDashboard.allStatuses')}</option>
+                <option value="pending">⏳ {t('status.pending')}</option>
+                <option value="in-progress">🔄 {t('status.inProgress')}</option>
+                <option value="resolved">✅ {t('status.resolved')}</option>
               </select>
             </div>
           </div>
@@ -266,7 +294,7 @@ const AdminDashboard = () => {
                   <div className="flex gap-2 mb-3">
                     <StatusBadge status={complaint.status} />
                     <span className={`text-xs px-2 py-1 rounded border ${getPriorityColor(complaint.priority)} font-medium`}>
-                      {complaint.priority.toUpperCase()}
+                      {getPriorityLabel(complaint.priority)}
                     </span>
                   </div>
 
@@ -287,7 +315,7 @@ const AdminDashboard = () => {
                   {/* Notes Count */}
                   {complaint.adminNotes?.length > 0 && (
                     <p className="text-xs font-semibold text-blue-600 mt-2">
-                      📝 {complaint.adminNotes.length} notes
+                      📝 {t('adminDashboard.notesCount', { count: complaint.adminNotes.length })}
                     </p>
                   )}
                 </div>
@@ -297,10 +325,10 @@ const AdminDashboard = () => {
             <div className="col-span-full text-center py-12">
               <div className="text-6xl mb-4">📭</div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                No complaints found
+                {t('adminDashboard.noComplaintsTitle')}
               </h2>
               <p className="text-gray-600">
-                Try adjusting your filters
+                {t('adminDashboard.noComplaintsSubtitle')}
               </p>
             </div>
           )}
@@ -348,7 +376,7 @@ const AdminDashboard = () => {
                   <div className="flex gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Status
+                        {t('adminDashboard.status')}
                       </label>
                       {selectedComplaint.status !== 'resolved' ? (
                         <button
@@ -363,15 +391,15 @@ const AdminDashboard = () => {
                         >
                           {actionLoading[selectedComplaint._id]
                             ? '...'
-                            : `→ ${getNextStatus(selectedComplaint.status)}`}
+                            : `→ ${getStatusLabel(getNextStatus(selectedComplaint.status))}`}
                         </button>
                       ) : (
-                        <span className="text-green-600 font-bold">✓ Resolved</span>
+                        <span className="text-green-600 font-bold">✓ {t('status.resolved')}</span>
                       )}
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Priority
+                        {t('adminDashboard.priority')}
                       </label>
                       <select
                         value={selectedComplaint.priority}
@@ -382,9 +410,9 @@ const AdminDashboard = () => {
                           selectedComplaint.priority
                         )}`}
                       >
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
+                        <option value="low">{t('adminDashboard.priorityLow')}</option>
+                        <option value="medium">{t('adminDashboard.priorityMedium')}</option>
+                        <option value="high">{t('adminDashboard.priorityHigh')}</option>
                       </select>
                     </div>
                   </div>
@@ -392,15 +420,15 @@ const AdminDashboard = () => {
                   {/* Category and Citizen */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm font-semibold text-gray-900">Category</p>
+                      <p className="text-sm font-semibold text-gray-900">{t('adminDashboard.category')}</p>
                       <p className="text-gray-700">
-                        {selectedComplaint.category === 'noise' && '🔊 Noise Pollution'}
-                        {selectedComplaint.category === 'garbage' && '🗑️ Garbage'}
-                        {selectedComplaint.category === 'water' && '💧 Water'}
+                        {selectedComplaint.category === 'noise' && `🔊 ${t('complaint.category.noise')}`}
+                        {selectedComplaint.category === 'garbage' && `🗑️ ${t('complaint.category.garbage')}`}
+                        {selectedComplaint.category === 'water' && `💧 ${t('complaint.category.water')}`}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-gray-900">Submitted By</p>
+                      <p className="text-sm font-semibold text-gray-900">{t('adminDashboard.submittedBy')}</p>
                       <p className="text-gray-700">{selectedComplaint.citizen?.name}</p>
                       <p className="text-sm text-gray-600">
                         {selectedComplaint.citizen?.email}
@@ -410,7 +438,7 @@ const AdminDashboard = () => {
 
                   {/* Description */}
                   <div>
-                    <p className="text-sm font-semibold text-gray-900 mb-2">Description</p>
+                    <p className="text-sm font-semibold text-gray-900 mb-2">{t('adminDashboard.description')}</p>
                     <p className="text-gray-700 bg-gray-50 p-4 rounded">
                       {selectedComplaint.description}
                     </p>
@@ -419,7 +447,7 @@ const AdminDashboard = () => {
                   {/* Admin Notes */}
                   <div>
                     <h3 className="text-sm font-semibold text-gray-900 mb-3">
-                      📝 Admin Notes ({selectedComplaint.adminNotes?.length || 0})
+                      📝 {t('adminDashboard.adminNotes')} ({selectedComplaint.adminNotes?.length || 0})
                     </h3>
 
                     {/* Notes List */}
@@ -430,7 +458,7 @@ const AdminDashboard = () => {
                           className="bg-blue-50 border border-blue-200 rounded p-3"
                         >
                           <p className="text-xs font-semibold text-blue-900 mb-1">
-                            {note.addedBy?.name || 'Admin'} • {new Date(note.addedAt).toLocaleString()}
+                            {note.addedBy?.name || t('nav.role.admin')} • {new Date(note.addedAt).toLocaleString()}
                           </p>
                           <p className="text-sm text-gray-800">{note.note}</p>
                         </div>
@@ -443,7 +471,7 @@ const AdminDashboard = () => {
                         type="text"
                         value={newNote}
                         onChange={(e) => setNewNote(e.target.value)}
-                        placeholder="Add a note..."
+                        placeholder={t('adminDashboard.addNotePlaceholder')}
                         className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                       />
                       <button
@@ -451,7 +479,7 @@ const AdminDashboard = () => {
                         disabled={noteLoading}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition disabled:opacity-50 text-sm font-semibold"
                       >
-                        {noteLoading ? '...' : 'Add'}
+                        {noteLoading ? '...' : t('adminDashboard.addNoteButton')}
                       </button>
                     </div>
                   </div>
@@ -459,12 +487,12 @@ const AdminDashboard = () => {
                   {/* Dates */}
                   <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 pt-4 border-t">
                     <div>
-                      <p className="font-semibold text-gray-900">Created</p>
+                      <p className="font-semibold text-gray-900">{t('adminDashboard.created')}</p>
                       {new Date(selectedComplaint.createdAt).toLocaleDateString()}
                     </div>
                     {selectedComplaint.resolvedAt && (
                       <div>
-                        <p className="font-semibold text-gray-900">Resolved</p>
+                        <p className="font-semibold text-gray-900">{t('adminDashboard.resolvedOn')}</p>
                         {new Date(selectedComplaint.resolvedAt).toLocaleDateString()}
                       </div>
                     )}

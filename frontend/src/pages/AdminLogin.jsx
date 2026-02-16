@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import authService from '../services/authService';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { t } = useLanguage();
 
   const handleChange = (e) => {
     setFormData({
@@ -24,7 +26,7 @@ const AdminLogin = () => {
       await authService.loginAdmin(formData.email, formData.password);
       navigate('/admin/dashboard');
     } catch (err) {
-      setError(err.message || 'Login failed');
+      setError(err.message || t('errors.loginFailed'));
     } finally {
       setLoading(false);
     }
@@ -39,16 +41,16 @@ const AdminLogin = () => {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             SAMAJSETU
           </h1>
-          <p className="text-gray-600">Admin Portal</p>
+          <p className="text-gray-600">{t('adminLogin.portalTitle')}</p>
           <p className="text-sm text-orange-600 font-semibold mt-2">
-            🔒 Authorized Personnel Only
+            🔒 {t('adminLogin.authorizedOnly')}
           </p>
         </div>
 
         {/* Login Card */}
         <div className="bg-white rounded-lg shadow-lg p-8 border-t-4 border-orange-500">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Admin Login
+            {t('adminLogin.title')}
           </h2>
 
           {/* Error Message */}
@@ -63,14 +65,14 @@ const AdminLogin = () => {
             {/* Email */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                📧 Admin Email
+                📧 {t('adminLogin.emailLabel')}
               </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="admin@example.com"
+                placeholder={t('adminLogin.emailPlaceholder')}
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
@@ -79,7 +81,7 @@ const AdminLogin = () => {
             {/* Password */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                🔐 Password
+                🔐 {t('adminLogin.passwordLabel')}
               </label>
               <input
                 type="password"
@@ -98,23 +100,23 @@ const AdminLogin = () => {
               disabled={loading}
               className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg transition disabled:opacity-50"
             >
-              {loading ? '⏳ Logging in...' : '✓ Admin Login'}
+              {loading ? `⏳ ${t('adminLogin.loggingIn')}` : `✓ ${t('adminLogin.loginButton')}`}
             </button>
           </form>
 
           {/* Register Link */}
           <p className="text-center text-gray-600 mt-6">
-            Don't have an admin account?{' '}
+            {t('adminLogin.noAccount')}{' '}
             <Link to="/admin/register" className="text-orange-600 hover:underline font-semibold">
-              Register here
+              {t('adminLogin.registerHere')}
             </Link>
           </p>
 
           {/* User Portal Link */}
           <p className="text-center text-gray-600 mt-4 pt-4 border-t">
-            Are you a citizen?{' '}
+            {t('adminLogin.citizenPrompt')}{' '}
             <Link to="/login" className="text-blue-600 hover:underline font-semibold">
-              Citizen Portal
+              {t('adminLogin.citizenPortal')}
             </Link>
           </p>
         </div>

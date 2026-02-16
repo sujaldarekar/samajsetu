@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import complaintService from '../services/complaintService';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const SubmitComplaint = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const SubmitComplaint = () => {
     location: '',
     image: null
   });
+  const { t } = useLanguage();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -54,15 +56,15 @@ const SubmitComplaint = () => {
     try {
       // Validate inputs
       if (!formData.title || !formData.description || !formData.location) {
-        throw new Error('Please fill in all required fields');
+        throw new Error(t('submit.validationRequired'));
       }
 
       if (formData.title.length < 5) {
-        throw new Error('Title must be at least 5 characters');
+        throw new Error(t('submit.validationTitleLength'));
       }
 
       if (formData.description.length < 10) {
-        throw new Error('Description must be at least 10 characters');
+        throw new Error(t('submit.validationDescriptionLength'));
       }
 
       // Create FormData for multipart upload
@@ -90,7 +92,7 @@ const SubmitComplaint = () => {
       navigate('/my-complaints');
     } catch (err) {
       console.error('❌ Error submitting complaint:', err);
-      setError(err.message || 'Failed to submit complaint. Please check your internet connection and try again.');
+      setError(err.message || t('submit.submitFailed'));
     } finally {
       setLoading(false);
     }
@@ -102,10 +104,10 @@ const SubmitComplaint = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-dark mb-2">
-            📝 Submit a Complaint
+            📝 {t('submit.title')}
           </h1>
           <p className="text-light">
-            Help us fix problems in your community. Be as detailed as possible.
+            {t('submit.subtitle')}
           </p>
         </div>
 
@@ -122,27 +124,27 @@ const SubmitComplaint = () => {
             {/* Title Field */}
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
-                Complaint Title <span className="text-red-500">*</span>
+                {t('submit.complaintTitle')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                placeholder="e.g., Loud construction noise near Main Street"
+                placeholder={t('submit.titlePlaceholder')}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 disabled={loading}
                 maxLength={100}
               />
               <p className="text-xs text-light mt-1">
-                {formData.title.length}/100 characters
+                {t('submit.titleCount', { count: formData.title.length })}
               </p>
             </div>
 
             {/* Category Field */}
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
-                Category <span className="text-red-500">*</span>
+                {t('submit.category')} <span className="text-red-500">*</span>
               </label>
               <select
                 name="category"
@@ -151,55 +153,55 @@ const SubmitComplaint = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 disabled={loading}
               >
-                <option value="noise">🔊 Noise Pollution</option>
-                <option value="garbage">🗑️ Garbage / Cleanliness</option>
-                <option value="water">💧 Water Supply Problem</option>
+                <option value="noise">🔊 {t('submit.categoryNoise')}</option>
+                <option value="garbage">🗑️ {t('submit.categoryGarbage')}</option>
+                <option value="water">💧 {t('submit.categoryWater')}</option>
               </select>
             </div>
 
             {/* Description Field */}
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
-                Detailed Description <span className="text-red-500">*</span>
+                {t('submit.description')} <span className="text-red-500">*</span>
               </label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
-                placeholder="Describe the issue in detail... When did it start? What exactly is the problem?"
+                placeholder={t('submit.descriptionPlaceholder')}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary h-32"
                 disabled={loading}
                 maxLength={1000}
               />
               <p className="text-xs text-light mt-1">
-                {formData.description.length}/1000 characters (minimum 10)
+                {t('submit.descriptionCount', { count: formData.description.length })}
               </p>
             </div>
 
             {/* Location Field */}
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
-                Location <span className="text-red-500">*</span>
+                {t('submit.location')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 name="location"
                 value={formData.location}
                 onChange={handleInputChange}
-                placeholder="e.g., 123 Main Street, Downtown District"
+                placeholder={t('submit.locationPlaceholder')}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 disabled={loading}
                 maxLength={200}
               />
               <p className="text-xs text-light mt-1">
-                Please provide complete address for better identification
+                {t('submit.locationHelp')}
               </p>
             </div>
 
             {/* Image Upload */}
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
-                Upload Photo Proof <span className="text-gray-500">(Optional)</span>
+                {t('submit.upload')} <span className="text-gray-500">({t('submit.optional')})</span>
               </label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                 {imagePreview ? (
@@ -217,7 +219,7 @@ const SubmitComplaint = () => {
                       }}
                       className="text-red-600 hover:text-red-800 text-sm font-semibold"
                     >
-                      Remove Image
+                      {t('submit.removeImage')}
                     </button>
                   </div>
                 ) : (
@@ -236,17 +238,17 @@ const SubmitComplaint = () => {
                     >
                       <div className="text-5xl mb-3">📸</div>
                       <p className="font-semibold text-dark">
-                        Click to upload or drag and drop
+                        {t('submit.uploadHintTitle')}
                       </p>
                       <p className="text-sm text-light">
-                        PNG, JPG, GIF up to 5MB
+                        {t('submit.uploadHintTypes')}
                       </p>
                     </label>
                   </div>
                 )}
               </div>
               <p className="text-xs text-light mt-2">
-                💡 Tip: Include a clear photo showing the issue for faster resolution
+                💡 {t('submit.tip')}
               </p>
             </div>
 
@@ -260,7 +262,7 @@ const SubmitComplaint = () => {
                 disabled={loading}
               />
               <label htmlFor="terms" className="ml-3 text-sm text-dark">
-                I confirm that the information provided is true and accurate
+                {t('submit.confirmation')}
               </label>
             </div>
 
@@ -271,7 +273,7 @@ const SubmitComplaint = () => {
                 disabled={loading}
                 className="flex-1 bg-primary hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition disabled:opacity-50"
               >
-                {loading ? '⏳ Submitting...' : '✅ Submit Complaint'}
+                {loading ? `⏳ ${t('submit.submitting')}` : `✅ ${t('submit.submit')}`}
               </button>
               <button
                 type="button"
@@ -279,7 +281,7 @@ const SubmitComplaint = () => {
                 disabled={loading}
                 className="px-6 bg-gray-300 hover:bg-gray-400 text-dark font-bold py-3 rounded-lg transition"
               >
-                Cancel
+                {t('submit.cancel')}
               </button>
             </div>
           </form>
@@ -287,13 +289,13 @@ const SubmitComplaint = () => {
 
         {/* Help Section */}
         <div className="bg-blue-50 rounded-lg p-6 mt-8 border-l-4 border-primary">
-          <h3 className="font-bold text-dark mb-3">✨ Tips for Better Results</h3>
+          <h3 className="font-bold text-dark mb-3">✨ {t('submit.tipsTitle')}</h3>
           <ul className="space-y-2 text-sm text-dark">
-            <li>✓ Provide clear, specific details about the problem</li>
-            <li>✓ Take a clear photo from different angles</li>
-            <li>✓ Mention the exact date and time of issue</li>
-            <li>✓ Be polite and objective in your description</li>
-            <li>✓ Include any relevant contact information</li>
+            <li>✓ {t('submit.tip1')}</li>
+            <li>✓ {t('submit.tip2')}</li>
+            <li>✓ {t('submit.tip3')}</li>
+            <li>✓ {t('submit.tip4')}</li>
+            <li>✓ {t('submit.tip5')}</li>
           </ul>
         </div>
       </div>
