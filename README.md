@@ -144,6 +144,36 @@ npm run dev
 
 ---
 
+## 🚀 Deploy on Render
+
+This repository now includes a Render Blueprint file: `render.yaml` (project root).
+
+### One-time setup
+1. Push this repo to GitHub.
+2. In Render, create a new **Blueprint** and select this repository.
+3. Render will create:
+  - `samajsetu-backend` (Node web service)
+  - `samajsetu-frontend` (Static site)
+
+### Required environment variables
+
+#### Backend (`samajsetu-backend`)
+- `MONGODB_URI`
+- `JWT_SECRET`
+- `JWT_EXPIRE` (default in blueprint: `7d`)
+- `ADMIN_REGISTRATION_CODE`
+- `CLOUDINARY_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+
+#### Frontend (`samajsetu-frontend`)
+- `VITE_API_URL` = `https://<your-backend-service>.onrender.com/api`
+
+### SPA routing
+`render.yaml` already includes a rewrite rule (`/* -> /index.html`) so React Router routes work correctly.
+
+---
+
 ## 📚 Complete Documentation
 
 ### Setup & Installation
