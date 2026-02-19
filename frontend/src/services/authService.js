@@ -22,6 +22,24 @@ const postWithFallback = async (primaryEndpoint, fallbackEndpoint, payload) => {
   }
 };
 
+const getApiErrorMessage = (error, fallbackMessage) => {
+  if (error?.response?.data?.errors?.length) {
+    return {
+      message: error.response.data.errors.map((item) => item.msg).join(', ')
+    };
+  }
+
+  if (error?.response?.data?.message) {
+    return { message: error.response.data.message };
+  }
+
+  if (error?.message) {
+    return { message: error.message };
+  }
+
+  return { message: fallbackMessage };
+};
+
 const authService = {
   /**
    * CITIZEN/USER AUTHENTICATION
@@ -53,7 +71,7 @@ const authService = {
 
       return response.data;
     } catch (error) {
-      throw error.response?.data || { message: 'Registration failed' };
+      throw getApiErrorMessage(error, 'Registration failed');
     }
   },
 
@@ -81,7 +99,7 @@ const authService = {
 
       return response.data;
     } catch (error) {
-      throw error.response?.data || { message: 'Login failed' };
+      throw getApiErrorMessage(error, 'Login failed');
     }
   },
 
@@ -117,7 +135,7 @@ const authService = {
 
       return response.data;
     } catch (error) {
-      throw error.response?.data || { message: 'Admin registration failed' };
+      throw getApiErrorMessage(error, 'Admin registration failed');
     }
   },
 
@@ -145,7 +163,7 @@ const authService = {
 
       return response.data;
     } catch (error) {
-      throw error.response?.data || { message: 'Admin login failed' };
+      throw getApiErrorMessage(error, 'Admin login failed');
     }
   },
 
