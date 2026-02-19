@@ -5,6 +5,23 @@
 
 import apiClient from './api';
 
+const isRouteNotFoundError = (error) => {
+  const status = error?.response?.status;
+  const message = error?.response?.data?.message || '';
+  return status === 404 || message.toLowerCase().includes('route') && message.toLowerCase().includes('not found');
+};
+
+const postWithFallback = async (primaryEndpoint, fallbackEndpoint, payload) => {
+  try {
+    return await apiClient.post(primaryEndpoint, payload);
+  } catch (error) {
+    if (fallbackEndpoint && isRouteNotFoundError(error)) {
+      return apiClient.post(fallbackEndpoint, payload);
+    }
+    throw error;
+  }
+};
+
 const authService = {
   /**
    * CITIZEN/USER AUTHENTICATION
@@ -18,11 +35,15 @@ const authService = {
    */
   registerUser: async (name, email, password) => {
     try {
-      const response = await apiClient.post('/auth/user/register', {
-        name,
-        email,
-        password
-      });
+      const response = await postWithFallback(
+        '/auth/user/register',
+        '/auth/register',
+        {
+          name,
+          email,
+          password
+        }
+      );
 
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
@@ -43,10 +64,14 @@ const authService = {
    */
   loginUser: async (email, password) => {
     try {
-      const response = await apiClient.post('/auth/user/login', {
-        email,
-        password
-      });
+      const response = await postWithFallback(
+        '/auth/user/login',
+        '/auth/login',
+        {
+          email,
+          password
+        }
+      );
 
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
@@ -73,12 +98,16 @@ const authService = {
    */
   registerAdmin: async (name, email, password, registrationCode) => {
     try {
-      const response = await apiClient.post('/auth/admin/register', {
-        name,
-        email,
-        password,
-        registrationCode
-      });
+      const response = await postWithFallback(
+        '/auth/admin/register',
+        '/auth/register',
+        {
+          name,
+          email,
+          password,
+          registrationCode
+        }
+      );
 
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
@@ -99,10 +128,14 @@ const authService = {
    */
   loginAdmin: async (email, password) => {
     try {
-      const response = await apiClient.post('/auth/admin/login', {
-        email,
-        password
-      });
+      const response = await postWithFallback(
+        '/auth/admin/login',
+        '/auth/login',
+        {
+          email,
+          password
+        }
+      );
 
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
