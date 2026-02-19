@@ -3,6 +3,7 @@ services:
     name: samajsetu-backend
     runtime: node
     rootDir: backend
+    plan: free
     autoDeploy: true
     buildCommand: npm install
     startCommand: npm start
